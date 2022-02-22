@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<BundleManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xds="http://www.w3.org/2001/XMLSchema">
+  <BasePath>Assets/Bundle/ExampleMap</BasePath>
+  <Maps>
+    <Entry Name="ExampleMap" Address="ExampleMap.prefab"/>
+  </Maps>
+</BundleManifest>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ModInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ModName>ExampleMap</ModName>
+  <ModDescription>This is an example map for utilizing the NebulousModKit</ModDescription>
+  <ModVer>0.1</ModVer>
+  <AssetBundles>
+    <string>examplemap</string>
+  </AssetBundles>
+  <GameVer>0.0.20</GameVer>
+</ModInfo>
