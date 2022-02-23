@@ -13,7 +13,7 @@ using UnityEditor;
 public static class NebulousModTools {
 
   /// <summary> Whitelist of all game dlls needed to compile the modkit
-	private static List<string> dllWhiteList = new List<string> {
+	public static List<string> DllWhiteList = new List<string> {
 			"Mirror.Authenticators.dll", "Mirror.Components.dll", 
 			"UIExtensions.dll", "Facepunch.Steamworks.Win64.dll",
 			"kcp2k.dll", "Mirror.dll", "Nebulous.dll", "Priority Queue.dll",
@@ -26,9 +26,9 @@ public static class NebulousModTools {
 	/// <summary> Folder for storing the whitelisted dlls
 	public const string LibDirectory = "Assets/Lib/";
 	/// <summary> Output folder for building assetbundles
-	private const string AssetBundleDirectory = "Assets/AssetBundles";
+	public const string AssetBundleDirectory = "Assets/AssetBundles";
 	/// <summary> Preprocessor define that gates code requiring whitelisted dlls
-	private const string NebDefine = "NEBULOUS_LOADED";
+	public const string NebDefine = "NEBULOUS_LOADED";
 	/// <summary> Default install location for Nebulous, may change
 	public static string installPath = "D:\\SteamLibrary\\steamapps\\common\\Nebulous";   
 
@@ -58,7 +58,7 @@ public static class NebulousModTools {
 	/// Adds a string to the Unity PlayerSettings DefineSymbols list. Defaults to selected build target group
 	/// <param name="thisDefine"> The string which will get added to the symbols list
 	/// </summary>
-	private static void LoadDefine(string thisDefine){
+	public static void LoadDefine(string thisDefine){
 		string defines = 
 				PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
 		if(!defines.Contains(thisDefine)){
@@ -75,7 +75,7 @@ public static class NebulousModTools {
 	/// Removes a string to the Unity PlayerSettings DefineSymbols list. Defaults to selected build target group
 	/// <param name="thisDefine"> The string which will get removed to the symbols list
 	/// </summary>
-	private static void UnloadDefine(string thisDefine){
+	public static void UnloadDefine(string thisDefine){
 		string defines = 
 				PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
 		if(defines.Contains(thisDefine)){
@@ -100,7 +100,7 @@ public static class NebulousModTools {
 	/// </summary>
 	public static bool CheckFilesAreLoaded(){
 		bool allFiles = true;
-		foreach (string file in dllWhiteList){
+		foreach (string file in DllWhiteList){
 			if(!File.Exists(LibDirectory + file)){
 				Debug.LogError("NebModSDK: Unable to find: " + LibDirectory + file);
 				allFiles = false;
@@ -114,14 +114,14 @@ public static class NebulousModTools {
 	/// Will not copy any files if they are not the files specified in dllWhiteList
 	/// <returns> Returns true if all files were copied correctly
 	/// </summary>
-	private static bool LoadGameDlls(){
+	public static bool LoadGameDlls(){
 		bool success = true;
 		if(installPath == ""){
 			installPath = EditorUtility.OpenFolderPanel("Nebulous Install Directory", "", "");
 		}
 		string dllDirectory = "\\Nebulous_Data\\Managed\\";
 
-		foreach (string file in dllWhiteList){
+		foreach (string file in DllWhiteList){
 			string fullWhitelistFile = installPath + dllDirectory + file;
 			if(File.Exists(fullWhitelistFile)){
 				File.Copy(fullWhitelistFile, LibDirectory+file);
@@ -133,63 +133,15 @@ public static class NebulousModTools {
 		return success;
 	}
 
-	/// <summary>
-	///	Menu command to trigger loading of the dlls. Will trigger a script compilation
-	/// </summary>
-	[MenuItem("Nebulous/Load Game Files")]
-	public static void LoadAllGameFiles() {
-		bool success = LoadGameDlls();
-		if(success){
-			LoadDefine(NebDefine);
-			AssetDatabase.Refresh();
-			UnityEditor.Compilation.CompilationPipeline.RequestScriptCompilation();
-		}
-	}
-
-	/// <summary>
-	/// Menu command to clear all the loaded whitelisted files. Will trigger a script compilation
-	/// </summary>
-	[MenuItem("Nebulous/Clear Game File Cache")]
-	public static void ClearAllGameFiles() {
-		foreach (string file in dllWhiteList){
-			if(File.Exists(LibDirectory + file)){
-				File.Delete(LibDirectory + file);
-			}
-		}
-		UnloadDefine(NebDefine);
-		AssetDatabase.Refresh();
-		UnityEditor.Compilation.CompilationPipeline.RequestScriptCompilation();
-	}
-
-
-
 	// ------------------------------------------------------------------------------------ //
 	// 																		Asset Bundles																	    //
 	// ------------------------------------------------------------------------------------ //
 
 	/// <summary>
-	/// Menu command to trigger a compressed assetbundle. Generates a folder Assets/AssetBundles by default
-	/// </summary>
-	[MenuItem("Nebulous/Assets/Build AssetBundles")]
-	public static void BuildAllAssetBundles() {
-		BuildBundles(true);
-	}
-
-	/// <summary>
-	/// Menu command to trigger an uncompressed assetbundle. Generates a folder Assets/AssetBundles by default
-	/// </summary>
-	[MenuItem("Nebulous/Assets/Build AssetBundles (Uncompressed)")]
-	public static void BuildAllAssetBundlesUncompressed() {
-		BuildBundles(false);
-	}
-
-  // TODO: Function to deploy mod to mod folder?
-
-	/// <summary>
 	/// Calls the BuildPipeline BuildAssetBundles function with compression if requested.
 	/// <param name="compressed"> True if building with compression enabled
 	/// </summary>
-	private static void BuildBundles(bool compressed) {
+	public static void BuildBundles(bool compressed) {
 		if (!Directory.Exists(AssetBundleDirectory)) {
 			Directory.CreateDirectory(AssetBundleDirectory);
 		}
