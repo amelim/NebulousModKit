@@ -6,8 +6,8 @@ Currently the mod supports the following content pipelines:
 * Mapping
 
 Additionally, there are some quality of life scripts/prefabs built into the modding kit
-* One button loading/updating of game dlls (no more copy) (Nebulous->Load Game Files)
-* AssetBundling (Non-functional atm)
+* One button loading/updating of game dlls (no more copy)
+* AssetBundling
 * Example Map (Generates a complete barebones map)
 
 Finally, new gameplay scripts will be available as part of the modding kit to enable more game play options, all fully functional with the current modding framework and without any additionaly dependencies for players! Currently supporting
