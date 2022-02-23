@@ -12,6 +12,11 @@ public class NebulousModKitWindow : EditorWindow
     private string BuildAssets = "Build AssetBundles";
     private string DeployAssets = "Deploy AssetBundle";
     private bool CompressToggle = false;
+    private string BuildMapTemplate = "Create Map Template";
+    private int PlayerCount = 4;
+    private bool RandomizedControlPoints = false;
+    private bool HDRPVolumetricFog = false;
+
 
     [MenuItem("Window/Nebulous")]
     public static void ShowWindow(){
@@ -58,5 +63,27 @@ public class NebulousModKitWindow : EditorWindow
         if(GUILayout.Button(DeployAssets)){
             // Do something
         }
+
+        // ----- Mapping ----- //
+        GUILayout.Label("Mapping", EditorStyles.boldLabel);
+        if(GUILayout.Button(BuildMapTemplate)){
+#if NEBULOUS_LOADED
+            TemplateMapGenerator.GenerateMapTemplate(PlayerCount);
+#else
+            // Display a warning if we don't have Nebulous dlls loaded
+            EditorUtility.DisplayDialog(
+                "Nebulous Mod Kit", 
+                "Please ensure the dlls are loaded from the main game before trying to generate a map template", 
+                "Ok");
+#endif
+        }
+
+        int prevPlayerCount = PlayerCount;
+        PlayerCount = EditorGUILayout.IntField("Number of players: ", PlayerCount);
+        // We don't want to generate invalid maps
+        if(PlayerCount < 2){
+            PlayerCount = prevPlayerCount;
+        }
+
     }
 }

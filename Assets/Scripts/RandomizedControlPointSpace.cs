@@ -6,9 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+#if NEBULOUS_LOADED
 using Game.Map;
-
-
 public class RandomizedControlPointSpace : MonoBehaviour
 { 
     [SerializeField]
@@ -79,4 +78,4 @@ public class RandomizedControlPointSpace : MonoBehaviour
         }
     }
 }
-
+#endif

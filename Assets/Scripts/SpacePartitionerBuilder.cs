@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+#if NEBULOUS_LOADED
 using Game.Map;
-
 [RequireComponent(typeof(SpacePartitioner))]
 public class SpacePartitionerBuilder : MonoBehaviour {
 
@@ -46,3 +46,4 @@ public class SpacePartitionerBuilder : MonoBehaviour {
     }
 #endif
 }
+#endif
