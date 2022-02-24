@@ -6,13 +6,14 @@ using UnityEditor;
 
 public class NebulousModKitWindow : EditorWindow
 {
-
+    private const string Version = "0.0.1";
     private string LoadDllButton = "Load DLLs";
-    private string ClearDllButton = "Clear DLLs";
+    private string ClearDllButton = "Clear Cache";
     private string BuildAssets = "Build AssetBundles";
     private string DeployAssets = "Deploy AssetBundle";
     private bool CompressToggle = false;
     private string BuildMapTemplate = "Create Map Template";
+    private string MapName = "Default Map";
     private int PlayerCount = 4;
     private bool RandomizedControlPoints = false;
     private bool HDRPVolumetricFog = false;
@@ -25,6 +26,7 @@ public class NebulousModKitWindow : EditorWindow
     }
 
     void OnGUI(){
+        GUILayout.Label("Nebulous Modkit - Version: " + Version, EditorStyles.boldLabel);
         // ----- Modkit Configuration ----- //
         GUILayout.Label("Modkit Configuration", EditorStyles.boldLabel);
         NebulousModTools.installPath = 
@@ -35,6 +37,8 @@ public class NebulousModKitWindow : EditorWindow
         if(GUILayout.Button(LoadDllButton)){
             bool success = NebulousModTools.LoadGameDlls();
             if(success){
+                // Cache the install location as it's correct
+                NebulousModTools.CacheAddress(NebulousModTools.installPath);
                 NebulousModTools.LoadDefine(NebulousModTools.NebDefine);
                 AssetDatabase.Refresh();
                 UnityEditor.Compilation.CompilationPipeline.RequestScriptCompilation();
@@ -65,6 +69,15 @@ public class NebulousModKitWindow : EditorWindow
         }
 
         // ----- Mapping ----- //
+        MapName = EditorGUILayout.TextField("Map Name", MapName);
+
+        int prevPlayerCount = PlayerCount;
+        PlayerCount = EditorGUILayout.IntField("Number of players: ", PlayerCount);
+        // We don't want to generate invalid maps
+        if(PlayerCount < 2){
+            PlayerCount = prevPlayerCount;
+        }
+
         GUILayout.Label("Mapping", EditorStyles.boldLabel);
         if(GUILayout.Button(BuildMapTemplate)){
 #if NEBULOUS_LOADED
@@ -78,12 +91,8 @@ public class NebulousModKitWindow : EditorWindow
 #endif
         }
 
-        int prevPlayerCount = PlayerCount;
-        PlayerCount = EditorGUILayout.IntField("Number of players: ", PlayerCount);
-        // We don't want to generate invalid maps
-        if(PlayerCount < 2){
-            PlayerCount = prevPlayerCount;
-        }
+
+
 
     }
 }

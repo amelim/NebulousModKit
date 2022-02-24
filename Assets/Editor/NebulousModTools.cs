@@ -30,7 +30,9 @@ public static class NebulousModTools {
 	/// <summary> Preprocessor define that gates code requiring whitelisted dlls
 	public const string NebDefine = "NEBULOUS_LOADED";
 	/// <summary> Default install location for Nebulous, may change
-	public static string installPath = "D:\\SteamLibrary\\steamapps\\common\\Nebulous";   
+	public static string installPath = "";   
+	public const string CachePath = "Assets/NebulousModKit/InstallCache.txt"; 
+
 
 
 	// ------------------------------------------------------------------------------------ //
@@ -44,15 +46,25 @@ public static class NebulousModTools {
 	[InitializeOnLoadMethod]
 	private static void checkIfNebulousExists()
 	{
-		string defines = 
-				PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
-		if(CheckFilesAreLoaded()){
-			LoadDefine(NebDefine);
-		}else{
+
+		// Check to see if there is a cached install file
+		string installCache = CheckForCache();
+		if(installCache != ""){
+			installPath = installCache;
+			if(!CheckFilesAreLoaded()){ // We have a chache file, but the dlls are not loaded
+				LoadGameDlls();
+				LoadDefine(NebDefine);
+			}
+		}
+
+		if(!CheckFilesAreLoaded()){ // If for some reason we don't have the dlls loaded, we need to prevent compilation
 			UnloadDefine(NebDefine);
 		}
+		string defines = 
+				PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+
 		Debug.LogFormat("NMK Preprocessor: {0}", defines);
-	}
+	} 
 
 	/// <summary>
 	/// Adds a string to the Unity PlayerSettings DefineSymbols list. Defaults to selected build target group
@@ -117,7 +129,12 @@ public static class NebulousModTools {
 	public static bool LoadGameDlls(){
 		bool success = true;
 		if(installPath == ""){
-			installPath = EditorUtility.OpenFolderPanel("Nebulous Install Directory", "", "");
+			// Check if we have a cache
+			if(CheckForCache() == ""){
+				installPath = EditorUtility.OpenFolderPanel("Nebulous Install Directory", "", "");
+				// Create cache of this address
+				CacheAddress(installPath);
+			}
 		}
 		string dllDirectory = "\\Nebulous_Data\\Managed\\";
 
@@ -131,6 +148,29 @@ public static class NebulousModTools {
 			}
 		}
 		return success;
+	}
+
+	/// <summary> Checks to see if a cached install location exists already
+	private static string CheckForCache(){
+		if(File.Exists(CachePath)){
+			string path = "";
+			using(StreamReader sr = File.OpenText(CachePath)){
+				path = sr.ReadLine();
+				if(path != null){
+					return path;
+				}
+			}
+		}
+		return "";
+	}
+
+	/// <summary> Saves the install file to a cache file inside of Assets/NebulousModKit
+	public static void CacheAddress(string address){
+		if(!File.Exists(address)){
+			using (StreamWriter sw = File.CreateText(CachePath)){
+				sw.WriteLine(address);
+			}
+		}
 	}
 
 	// ------------------------------------------------------------------------------------ //
@@ -147,5 +187,9 @@ public static class NebulousModTools {
 		}
 
 		BuildPipeline.BuildAssetBundles(AssetBundleDirectory, compressed ? BuildAssetBundleOptions.None : BuildAssetBundleOptions.UncompressedAssetBundle, BuildTarget.StandaloneWindows);
+	}
+
+	public static void DeployBundles(){
+
 	}
 }
