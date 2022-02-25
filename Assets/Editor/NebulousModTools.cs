@@ -23,10 +23,12 @@ public static class NebulousModTools {
 			"QuickGraph.Core.dll", "QuickGraph.Data.dll", "QuickGraph.Graphviz.dll", 
 			"XNode.dll", "ShapesRuntime.dll"};
 
+	public const string version = "0.0.1";
 	/// <summary> Folder for storing the whitelisted dlls
 	public const string LibDirectory = "Assets/Lib/";
 	/// <summary> Output folder for building assetbundles
 	public const string AssetBundleDirectory = "Assets/AssetBundles";
+	public static string bundleDir = "Assets/NebulousModKit/Mods/";
 	/// <summary> Preprocessor define that gates code requiring whitelisted dlls
 	public const string NebDefine = "NEBULOUS_LOADED";
 	/// <summary> Default install location for Nebulous, may change
@@ -189,7 +191,8 @@ public static class NebulousModTools {
 		BuildPipeline.BuildAssetBundles(AssetBundleDirectory, compressed ? BuildAssetBundleOptions.None : BuildAssetBundleOptions.UncompressedAssetBundle, BuildTarget.StandaloneWindows);
 	}
 
-	public static void DeployBundles(){
+
+	public static void DeployBundle(string tag){
 
 	}
 }

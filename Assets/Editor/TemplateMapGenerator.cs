@@ -42,7 +42,7 @@ public static class TemplateMapGenerator
 #endif
     }
 
-    public static bool GenerateMapTemplate(int playerCount){
+    public static bool GenerateMapTemplate(string mapName, int playerCount){
 #if NEBULOUS_LOADED
         // Create Map Center
         GameObject mapCenter = new GameObject("Map Center");
@@ -50,6 +50,7 @@ public static class TemplateMapGenerator
         mapCenter.AddComponent<SpacePartitionerBuilder>();
         // Create Battlespace script
         GameObject battleSpace = new GameObject("Battlespace");
+        battleSpace.name = mapName;
         battleSpace.transform.parent = mapCenter.transform;
         battleSpace.AddComponent<Battlespace>();
         Battlespace bsScript = battleSpace.GetComponent<Battlespace>();
